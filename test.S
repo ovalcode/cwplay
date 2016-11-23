@@ -10,10 +10,22 @@ _start:
   #movw $0 , %bx
   #int $0x10
 
+  lgdt GlobalDescriptorTable
+  mov %cr0 , %eax 
+  orb $1 , %al    
+	
+  cli       
+        mov %eax , %cr0
+
+  mov $0x08 , %bx
+  mov %bx , %fs
+
   movw $0xb800 , %ax
   movw %ax , %ds
   movb $65 , %al
   movb %al , 0
+
+  mov %al , %fs:(%ebx)
 
 GlobalDescriptorTable:
 
