@@ -5,10 +5,15 @@ _init:
   .global _start
 _start:
 
-  movb $'Z' , %al
-  movb $0x0e , %ah
-  movw $0 , %bx
-  int $0x10
+  #movb $'Z' , %al
+  #movb $0x0e , %ah
+  #movw $0 , %bx
+  #int $0x10
+
+  movw $0xb800 , %ax
+  movw %ax , %ds
+  movb $65 , %al
+  movb %al , 0
 
 GlobalDescriptorTable:
 
