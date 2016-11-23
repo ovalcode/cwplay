@@ -1,0 +1,11 @@
+enter protected mode
+perform interrupt
+physical write to character ram
+task switch between interrupt and main process
+mark read only pages
+
+https://thiscouldbebetter.wordpress.com/2011/03/17/entering-protected-mode-from-assembly/
+http://www.codeproject.com/Articles/45788/The-Real-Protected-Long-mode-assembly-tutorial-for
+http://wiki.osdev.org/GDT_Tutorial
+http://www.tldp.org/HOWTO/Assembly-HOWTO/gas.html
+http://www.linuxquestions.org/questions/programming-9/help-loading-up-gdt-switching-to-protected-mode-assembly-at-and-t-syntax-205639/
