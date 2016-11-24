@@ -9,3 +9,7 @@ http://www.codeproject.com/Articles/45788/The-Real-Protected-Long-mode-assembly-
 http://wiki.osdev.org/GDT_Tutorial
 http://www.tldp.org/HOWTO/Assembly-HOWTO/gas.html
 http://www.linuxquestions.org/questions/programming-9/help-loading-up-gdt-switching-to-protected-mode-assembly-at-and-t-syntax-205639/
+
+
+nasm tt.S -o floppy.img
+dd if=/dev/zero of=floppy.img bs=1 count=1474048 seek=512
