@@ -1,6 +1,20 @@
 use16
 org 0x7C00 ; boot sector address
 
+        mov ah,0
+        mov dl,0
+        int 0x13
+        
+        mov ah,2
+        mov al,16
+        mov dl,0
+        mov ch,0
+        mov dh,0
+        mov cl,2
+      
+        mov bx, InterruptDescriptorTable
+        int 0x13
+
         lgdt [GlobalDescriptorPointer] ; load the GDT  
         lidt [InterruptDescriptorPointer]
         mov eax,cr0 ; eax = machine status word (MSW)
@@ -89,15 +103,348 @@ InterruptDescriptorPointer:
 
 InterruptDescriptorPointerEnd:
 
+
+
+PadOutWithZeroesSectorOne:
+	times ((0x200 - 2) - ($ - $$)) db 0x00
+
+
+BootSectorSignature:
+	dw 0xAA55
+
 InterruptDescriptorTable:
   dw int0
   dw 8
   db 0
   db 0x8e
   dw 0
+
+  dw int1
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int2
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int3
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int4
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int5
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int6
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int7
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int8
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int9
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int10
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int11
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int12
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int13
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int14
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int15
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int16
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int17
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int18
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int19
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int20
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int21
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int22
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int23
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int24
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int25
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int26
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int27
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int28
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int29
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int30
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int31
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
 InterruptDescriptorTableEnd:
 
-use32
+img: db '\', '|', '/','-'
+ind: db 0
+
+int0:
+        mov al,0
+        jmp proc
+int1:
+        mov al,1
+        jmp proc
+
+int2:
+        mov al,2
+        jmp proc
+
+int3:
+        mov al,3
+        jmp proc
+
+int4:
+        mov al,4
+        jmp proc
+
+int5:
+        mov al,5
+        jmp proc
+
+int6:
+        mov al,6
+        jmp proc
+
+int7:
+        mov al,7
+        jmp proc
+
+int8:
+cli
+    mov bx,0x10
+mov ds,bx
+mov fs,bx
+mov ebx,0xB8000
+mov al, [fs:ebx]
+not al
+
+mov [fs:ebx],al	; write char to display memory
+iret
+int9:
+        mov al,9
+        jmp proc
+
+int10:
+        mov al,10
+        jmp proc
+
+int11:
+        mov al,11
+        jmp proc
+
+int12:
+        mov al,12
+        jmp proc
+
+int13:
+        mov al,13
+        jmp proc
+
+int14:
+        mov al,14
+        jmp proc
+
+int15:
+        mov al,15
+        jmp proc
+
+int16:
+        mov al,16
+        jmp proc
+
+int17:
+        mov al,17
+        jmp proc
+
+int18:
+        mov al,18
+        jmp proc
+
+int19:
+        mov al,19
+        jmp proc
+
+int20:
+        mov al,20
+        jmp proc
+
+int21:
+        mov al,21
+        jmp proc
+
+int22:
+        mov al,22
+        jmp proc
+
+int23:
+        mov al,23
+        jmp proc
+
+int24:
+        mov al,24
+        jmp proc
+
+int25:
+        mov al,25
+        jmp proc
+
+int26:
+        mov al,26
+        jmp proc
+
+int27:
+        mov al,27
+        jmp proc
+
+int28:
+        mov al,28
+        jmp proc
+
+int29:
+        mov al,29
+        jmp proc
+
+int30:
+        mov al,30
+        jmp proc
+
+int31:
+        mov al,31
+        jmp proc
+
+
 test: nop
       nop
       nop
@@ -108,14 +455,22 @@ test: nop
       nop
       mov al , 10
       mov cl, 4
-      ;sti
-      div cl
-        mov al,70
-mov bx,0x10
+    mov bx,0x10
 mov ds,bx
 mov fs,bx
+
 mov ebx,0xB8000 ; address of first char for VGA mode 3
+mov al, 65
 mov [fs:ebx],al	; write char to display memory
+
+      sti
+      ;div cl
+       ; mov al,48
+;mov bx,0x10
+;mov ds,bx
+;mov fs,bx
+;mov ebx,0xB8000 ; address of first char for VGA mode 3
+;mov [fs:ebx],al	; write char to display memory
 
 ;temp: jmp temp
 	
@@ -123,19 +478,17 @@ mov [fs:ebx],al	; write char to display memory
 
 test2: jmp test2
 
-int0:
-        mov al,67
+
+
+proc:
 mov bx,0x10
 mov ds,bx
 mov fs,bx
 mov ebx,0xB8000 ; address of first char for VGA mode 3
+add al, 65
 mov [fs:ebx],al	; write char to display memory
+
+
 intloop: jmp intloop
 
-PadOutWithZeroesSectorOne:
-	times ((0x200 - 2) - ($ - $$)) db 0x00
-
-
-BootSectorSignature:
-	dw 0xAA55
 
