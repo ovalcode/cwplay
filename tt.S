@@ -2,6 +2,7 @@ use16
 org 0x7C00 ; boot sector address
 
         lgdt [GlobalDescriptorPointer] ; load the GDT  
+        lidt [InterruptDescriptorPointer]
         mov eax,cr0 ; eax = machine status word (MSW)
         or al,1     ; set the protection enable bit of the MSW to 1
 	;
@@ -81,7 +82,19 @@ GlobalDescriptorTable:
 
 GlobalDescriptorTableEnd:
 
+InterruptDescriptorPointer:
+  dw InterruptDescriptorTableEnd - InterruptDescriptorTable - 1
+  dw InterruptDescriptorTable
+  db 0, 0
+
+InterruptDescriptorPointerEnd:
+
 InterruptDescriptorTable:
+  dw int0
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
 InterruptDescriptorTableEnd:
 
 use32
@@ -93,17 +106,31 @@ test: nop
       nop
       nop
       nop
-;temp: jmp temp
-	
-
-        mov al,65
+      mov al , 10
+      mov cl, 4
+      ;sti
+      div cl
+        mov al,70
 mov bx,0x10
 mov ds,bx
 mov fs,bx
 mov ebx,0xB8000 ; address of first char for VGA mode 3
 mov [fs:ebx],al	; write char to display memory
 
+;temp: jmp temp
+	
+
+
 test2: jmp test2
+
+int0:
+        mov al,67
+mov bx,0x10
+mov ds,bx
+mov fs,bx
+mov ebx,0xB8000 ; address of first char for VGA mode 3
+mov [fs:ebx],al	; write char to display memory
+intloop: jmp intloop
 
 PadOutWithZeroesSectorOne:
 	times ((0x200 - 2) - ($ - $$)) db 0x00
