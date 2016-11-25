@@ -1,7 +1,7 @@
 use16
 org 0x7C00 ; boot sector address
 
-        lgdt [GlobalDescriptorTable] ; load the GDT  
+        lgdt [GlobalDescriptorPointer] ; load the GDT  
         mov eax,cr0 ; eax = machine status word (MSW)
         or al,1     ; set the protection enable bit of the MSW to 1
 	;
@@ -18,6 +18,11 @@ org 0x7C00 ; boot sector address
         jmp 0x8:test
 
 
+GlobalDescriptorPointer:
+  dw GlobalDescriptorTableEnd - GlobalDescriptorTable - 1
+  dw GlobalDescriptorTable
+  db 0, 0
+GlobalDescriptorPointerEnd:
 
 GlobalDescriptorTable:   
 
@@ -47,9 +52,9 @@ GlobalDescriptorTable:
 	; create two descriptors:
 	; one for the GDT itself, plus a 4 gibabyte data segment
 
-	dw GlobalDescriptorTableEnd - GlobalDescriptorTable - 1 
+	dw 0 
 	; segment address bits 0-15, 16-23
-	dw GlobalDescriptorTable 
+	dw 0 
 	db 0	
 	; flags 1, segment length 16-19 + flags 2
 	db 0, 0
@@ -75,6 +80,9 @@ GlobalDescriptorTable:
 	;
 
 GlobalDescriptorTableEnd:
+
+InterruptDescriptorTable:
+InterruptDescriptorTableEnd:
 
 use32
 test: nop
