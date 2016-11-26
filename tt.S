@@ -17,10 +17,41 @@ org 0x7C00 ; boot sector address
 
         lgdt [GlobalDescriptorPointer] ; load the GDT  
         lidt [InterruptDescriptorPointer]
-        mov eax,cr0 ; eax = machine status word (MSW)
-        or al,1     ; set the protection enable bit of the MSW to 1
 	;
         cli         ; disable interrupts
+
+        mov al, 0x11
+	out 0x20, al 
+	
+        out 0xa0, al
+
+        mov al, 0x20
+        out 0x21, al
+
+        mov al, 0x28
+        out 0xa1, al
+			
+        mov al, 0x04
+        out 0x21, al
+			
+        mov al, 0x02
+        out 0xa1, al
+
+        mov al, 0x01
+        out 0x21, al			
+			
+        mov al, 0x01
+        out 0xa1, al
+			
+        mov al, 0x0
+        out 0x21, al
+			
+        mov al, 0x0
+        out 0xa1, al
+			
+        mov eax,cr0 ; eax = machine status word (MSW)
+        or al,1     ; set the protection enable bit of the MSW to 1
+
         mov cr0,eax ; start protected mode
 	;
         ;mov bx,0x08 ; the size of a GDT descriptor is 8 bytes
@@ -96,12 +127,6 @@ GlobalDescriptorTable:
 
 GlobalDescriptorTableEnd:
 
-InterruptDescriptorPointer:
-  dw InterruptDescriptorTableEnd - InterruptDescriptorTable - 1
-  dw InterruptDescriptorTable
-  db 0, 0
-
-InterruptDescriptorPointerEnd:
 
 
 
@@ -111,6 +136,14 @@ PadOutWithZeroesSectorOne:
 
 BootSectorSignature:
 	dw 0xAA55
+
+InterruptDescriptorPointer:
+  dw InterruptDescriptorTableEnd - InterruptDescriptorTable - 1
+  dw InterruptDescriptorTable
+  db 0, 0
+
+InterruptDescriptorPointerEnd:
+
 
 InterruptDescriptorTable:
   dw int0
@@ -305,10 +338,106 @@ InterruptDescriptorTable:
   db 0x8e
   dw 0
 
+  dw int32
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int33
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int34
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int35
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int36
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int37
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int38
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int39
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int40
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int41
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int42
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int43
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int44
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int45
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int46
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+  dw int47
+  dw 8
+  db 0
+  db 0x8e
+  dw 0
+
+
+
 InterruptDescriptorTableEnd:
 
-img: db '\', '|', '/','-'
-ind: db 0
 
 int0:
         mov al,0
@@ -342,16 +471,19 @@ int7:
         jmp proc
 
 int8:
-cli
-    mov bx,0x10
-mov ds,bx
-mov fs,bx
-mov ebx,0xB8000
-mov al, [fs:ebx]
-not al
+        mov al,8
+        jmp proc
 
-mov [fs:ebx],al	; write char to display memory
-iret
+;cli
+;    mov bx,0x10
+;mov ds,bx
+;mov fs,bx
+;mov ebx,0xB8000
+;mov al, [fs:ebx]
+;not al
+
+;mov [fs:ebx],al	; write char to display memory
+;iret
 int9:
         mov al,9
         jmp proc
@@ -444,6 +576,71 @@ int31:
         mov al,31
         jmp proc
 
+int32:
+        mov al,32
+        jmp proc
+
+int33:
+        mov al,33
+        jmp proc
+
+int34:
+        mov al,34
+        jmp proc
+
+int35:
+        mov al,35
+        jmp proc
+
+int36:
+        mov al,36
+        jmp proc
+
+int37:
+        mov al,37
+        jmp proc
+
+int38:
+        mov al,38
+        jmp proc
+
+int39:
+        mov al,39
+        jmp proc
+
+int40:
+        mov al,40
+        jmp proc
+
+int41:
+        mov al,41
+        jmp proc
+
+int42:
+        mov al,42
+        jmp proc
+
+int43:
+        mov al,43
+        jmp proc
+
+int44:
+        mov al,44
+        jmp proc
+
+int45:
+        mov al,45
+        jmp proc
+
+int46:
+        mov al,46
+        jmp proc
+
+int47:
+        mov al,47
+        jmp proc
+
+use32
 
 test: nop
       nop
