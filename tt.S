@@ -21,37 +21,37 @@ org 0x7C00 ; boot sector address
         cli         ; disable interrupts
 
         mov al, 0x11
-	out 0x20, al 
+	out 0x20, al; 1 
 	
-        out 0xa0, al
+        out 0xa0, al; 2
 
         mov al, 0x20
-        out 0x21, al
+        out 0x21, al; 3
 
         mov al, 0x28
-        out 0xa1, al
+        out 0xa1, al;4
 			
         mov al, 0x04
-        out 0x21, al
+        out 0x21, al;5
 			
         mov al, 0x02
-        out 0xa1, al
+        out 0xa1, al;6
 
         mov al, 0x01
-        out 0x21, al			
+        out 0x21, al; 7		
 			
         mov al, 0x01
-        out 0xa1, al
+        out 0xa1, al; 8
 			
         mov al, 0x0
-        out 0x21, al
+        out 0x21, al; 9
 			
         mov al, 0x0
-        out 0xa1, al
+        out 0xa1, al; 10
 			
         mov eax,cr0 ; eax = machine status word (MSW)
         or al,1     ; set the protection enable bit of the MSW to 1
-
+        and eax, 0xfffbffff
         mov cr0,eax ; start protected mode
 	;
         ;mov bx,0x08 ; the size of a GDT descriptor is 8 bytes
@@ -438,209 +438,252 @@ InterruptDescriptorTable:
 
 InterruptDescriptorTableEnd:
 
+use32
 
 int0:
+        cli
         mov al,0
         jmp proc
 int1:
+        cli
         mov al,1
         jmp proc
 
 int2:
+        cli
         mov al,2
         jmp proc
 
 int3:
+        cli
         mov al,3
         jmp proc
 
 int4:
+        cli
         mov al,4
         jmp proc
 
 int5:
+        cli
         mov al,5
         jmp proc
 
 int6:
+        cli
         mov al,6
         jmp proc
 
 int7:
+        cli
         mov al,7
         jmp proc
 
 int8:
+        cli
         mov al,8
         jmp proc
 
-;cli
-;    mov bx,0x10
-;mov ds,bx
-;mov fs,bx
-;mov ebx,0xB8000
-;mov al, [fs:ebx]
-;not al
-
-;mov [fs:ebx],al	; write char to display memory
-;iret
 int9:
+        cli
         mov al,9
         jmp proc
 
 int10:
+        cli
         mov al,10
         jmp proc
 
 int11:
+        cli
         mov al,11
         jmp proc
 
 int12:
+        cli
         mov al,12
         jmp proc
 
 int13:
+        cli
         mov al,13
         jmp proc
 
 int14:
+        cli
         mov al,14
         jmp proc
 
 int15:
+        cli
         mov al,15
         jmp proc
 
 int16:
+        cli
         mov al,16
         jmp proc
 
 int17:
+        cli
         mov al,17
         jmp proc
 
 int18:
+        cli
         mov al,18
         jmp proc
 
 int19:
+        cli
         mov al,19
         jmp proc
 
 int20:
+        cli
         mov al,20
         jmp proc
 
 int21:
+        cli
         mov al,21
         jmp proc
 
 int22:
+        cli
         mov al,22
         jmp proc
 
 int23:
+        cli
         mov al,23
         jmp proc
 
 int24:
+        cli
         mov al,24
         jmp proc
 
 int25:
+        cli
         mov al,25
         jmp proc
 
 int26:
+        cli
         mov al,26
         jmp proc
 
 int27:
+        cli
         mov al,27
         jmp proc
 
 int28:
+        cli
         mov al,28
         jmp proc
 
 int29:
+        cli
         mov al,29
         jmp proc
 
 int30:
+        cli
         mov al,30
         jmp proc
 
 int31:
+        cli
         mov al,31
         jmp proc
 
 int32:
+        cli
         mov al,32
         jmp proc
 
 int33:
+        cli
         mov al,33
         jmp proc
 
 int34:
+        cli
         mov al,34
         jmp proc
 
 int35:
+        cli
         mov al,35
         jmp proc
 
 int36:
+        cli
         mov al,36
         jmp proc
 
 int37:
+        cli
         mov al,37
         jmp proc
 
 int38:
+        cli
         mov al,38
         jmp proc
 
 int39:
+        cli
         mov al,39
         jmp proc
 
 int40:
+        cli
         mov al,40
         jmp proc
 
 int41:
+        cli
         mov al,41
         jmp proc
 
 int42:
+        cli
         mov al,42
         jmp proc
 
 int43:
+        cli
         mov al,43
         jmp proc
 
 int44:
+        cli
         mov al,44
         jmp proc
 
 int45:
+        cli
         mov al,45
         jmp proc
 
 int46:
+        cli
         mov al,46
         jmp proc
 
 int47:
-        mov al,47
-        jmp proc
+        cli
+        ;mov al,47
+        mov al, 0x20
+        out 0xa0, al  
+        add esp, 8       
+        iret
+        ;jmp proc
 
-use32
+
 
 test: nop
       nop
@@ -656,9 +699,9 @@ test: nop
 mov ds,bx
 mov fs,bx
 
-mov ebx,0xB8000 ; address of first char for VGA mode 3
-mov al, 65
-mov [fs:ebx],al	; write char to display memory
+;mov ebx,0xB8000 ; address of first char for VGA mode 3
+;mov al, 65
+;mov [fs:ebx],al	; write char to display memory
 
       sti
       ;div cl
@@ -681,9 +724,18 @@ proc:
 mov bx,0x10
 mov ds,bx
 mov fs,bx
-mov ebx,0xB8000 ; address of first char for VGA mode 3
+mov ebx,0xB8002 ; address of first char for VGA mode 3
 add al, 65
 mov [fs:ebx],al	; write char to display memory
+
+mov ebx,0xB8004 ; address of first char for VGA mode 3
+mov al, 'P' 
+mov [fs:ebx],al	; write char to display memory
+
+mov ebx,0xB8006 ; address of first char for VGA mode 3
+mov al, 'p'
+mov [fs:ebx],al	; write char to display memory
+
 
 
 intloop: jmp intloop
