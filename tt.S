@@ -614,8 +614,15 @@ mov bx,0x10
 mov ds,bx
 mov fs,bx
 
+mov eax, chars
+mov ebx, [pos]
+add eax, ebx
+mov ebx, eax
+mov al, [ebx]
+
+
 mov ebx,0xB8002 ; address of first char for VGA mode 3
-mov al, 65
+
 mov [fs:ebx],al	; write char to display memory
 
 mov ebx,0xB8004 ; address of first char for VGA mode 3
@@ -626,7 +633,27 @@ mov ebx,0xB8006 ; address of first char for VGA mode 3
 mov al, 'p'
 mov [fs:ebx],al	; write char to display memory
 
+
+mov eax, 1
+mov ebx, [pos]
+add eax, ebx
+and eax, 3
+mov ebx, eax
+mov [pos], ebx
+
+
+;mov al, [pos]
+;add al, 1
+;and al, 3
+;mov [pos], al
+
         iret
+
+chars:
+        db '-','\', '|', '/'
+
+pos:
+        db 0, 0, 0, 0
 
         ;mov al,32
         ;jmp proc
