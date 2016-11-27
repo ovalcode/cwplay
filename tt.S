@@ -12,7 +12,7 @@ org 0x7C00 ; boot sector address
         mov dh,0
         mov cl,2
       
-        mov bx, InterruptDescriptorTable
+        mov bx, InterruptDescriptorPointer
         int 0x13
 
         lgdt [GlobalDescriptorPointer] ; load the GDT  
@@ -51,7 +51,7 @@ org 0x7C00 ; boot sector address
 			
         mov eax,cr0 ; eax = machine status word (MSW)
         or al,1     ; set the protection enable bit of the MSW to 1
-        and eax, 0xfffbffff
+        ;and eax, 0xfffbffff
         mov cr0,eax ; start protected mode
 	;
         ;mov bx,0x08 ; the size of a GDT descriptor is 8 bytes
@@ -601,8 +601,35 @@ int31:
 
 int32:
         cli
-        mov al,32
-        jmp proc
+
+        mov al, 0x20
+        out 0xa0, al  
+
+        mov al, 0x20
+        out 0x20, al  
+
+        ;add esp, 8       
+
+mov bx,0x10
+mov ds,bx
+mov fs,bx
+
+mov ebx,0xB8002 ; address of first char for VGA mode 3
+mov al, 65
+mov [fs:ebx],al	; write char to display memory
+
+mov ebx,0xB8004 ; address of first char for VGA mode 3
+mov al, 'P' 
+mov [fs:ebx],al	; write char to display memory
+
+mov ebx,0xB8006 ; address of first char for VGA mode 3
+mov al, 'p'
+mov [fs:ebx],al	; write char to display memory
+
+        iret
+
+        ;mov al,32
+        ;jmp proc
 
 int33:
         cli
@@ -679,7 +706,11 @@ int47:
         ;mov al,47
         mov al, 0x20
         out 0xa0, al  
-        add esp, 8       
+
+        mov al, 0x20
+        out 0x20, al  
+
+        ;add esp, 8       
         iret
         ;jmp proc
 
@@ -698,6 +729,7 @@ test: nop
     mov bx,0x10
 mov ds,bx
 mov fs,bx
+mov ss, bx
 
 ;mov ebx,0xB8000 ; address of first char for VGA mode 3
 ;mov al, 65
@@ -724,6 +756,7 @@ proc:
 mov bx,0x10
 mov ds,bx
 mov fs,bx
+
 mov ebx,0xB8002 ; address of first char for VGA mode 3
 add al, 65
 mov [fs:ebx],al	; write char to display memory
